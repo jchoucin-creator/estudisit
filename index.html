@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Apps d’estudi</title>
+<meta name="description" content="Aplicacions per estudiar i preparar exàmens des del mòbil.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eceef0; --surface:#ffffff; --ink:#1d242b; --muted:#5b6670; --line:#d4d9dd;
+  --accent:#c2410c; --accent-soft:#fbe4d8; --on-accent:#ffffff;
+  --display:"Bitter", Georgia, serif; --body:"Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#13171b; --surface:#1c2227; --ink:#e6e9ec; --muted:#9aa4ad; --line:#2d353c;
+    --accent:#f07a3a; --accent-soft:#3a2418; --on-accent:#1a0f08;
+    color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.5;-webkit-text-size-adjust:100%}
+h1,h2,h3{font-family:var(--display);line-height:1.2;text-wrap:balance;margin:0}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+header{background:var(--ink);color:var(--bg);padding:calc(env(safe-area-inset-top) + 28px) 16px 24px}
+header .wrap,main{max-width:720px;margin:0 auto}
+header p{margin:6px 0 0;opacity:.8}
+header h1{font-size:28px}
+main{padding:16px 16px calc(32px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:20px}
+.tools{display:flex;flex-direction:column;gap:10px}
+input[type=search]{width:100%;font:inherit;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chips button{font:inherit;font-size:15px;font-weight:600;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:999px;padding:6px 14px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+section h2{font-size:15px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-family:var(--body);font-weight:700;margin:0 0 8px}
+.list{display:flex;flex-direction:column;gap:10px}
+a.item{display:flex;gap:14px;align-items:flex-start;text-decoration:none;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+a.item:hover{border-color:var(--accent)}
+.item .ico{flex:none;width:44px;height:44px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:18px}
+.item .txt{flex:1;min-width:0}
+.item h3{font-size:19px}
+.item p{margin:4px 0 0;color:var(--muted);font-size:15px}
+.item .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.pill{font-size:13px;font-weight:600;padding:2px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.pill.new{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.item .go{color:var(--muted);font-size:22px;align-self:center}
+.empty{color:var(--muted);text-align:center;padding:24px 0}
+footer{color:var(--muted);font-size:14px;text-align:center}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Apps d’estudi</h1>
+    <p>Tria un tema per repassar i practicar l’examen des del mòbil.</p>
+  </div>
+</header>
+<main>
+  <div class="tools">
+    <label for="q" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Cerca un tema</label>
+    <input id="q" type="search" placeholder="Cerca un tema…" autocomplete="off">
+    <div class="chips" id="chips" role="group" aria-label="Filtra per assignatura"></div>
+  </div>
+  <div id="list"></div>
+  <footer>Els teus esborranys i les notes es desen només en aquest dispositiu.</footer>
+</main>
+
+<script>
+/* ============================================================
+   PER AFEGIR UN TEMA NOU:
+   1. Puja l'arxiu .html a la carpeta de l'assignatura (p. ex. historia/).
+   2. Afegeix-ne una entrada a la llista TEMES, aquí a sota.
+   L'índex agrupa per assignatura i ordena per "ordre" automàticament.
+   - nou: true  → mostra l'etiqueta "Nou"
+   ============================================================ */
+const TEMES = [
+  {
+    assignatura: "Història",
+    titol: "La Revolució Industrial",
+    descripcio: "Temari, preguntes de redacció amb correcció, targetes i cronologia.",
+    url: "historia/revolucio-industrial.html",
+    curs: "",          // opcional, p. ex. "4t ESO"
+    ordre: 1,
+    nou: true
+  }
+  /* ,{
+    assignatura: "Història",
+    titol: "Les revolucions liberals",
+    descripcio: "…",
+    url: "historia/revolucions-liberals.html",
+    curs: "4t ESO",
+    ordre: 2
+  } */
+];
+
+const norm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const subjects = [...new Set(TEMES.map(t => t.assignatura))].sort((a,b)=>a.localeCompare(b,"ca"));
+let filter = "Totes";
+
+function renderChips(){
+  const chips = document.getElementById("chips");
+  if (subjects.length < 2) { chips.hidden = true; return; }
+  chips.innerHTML = ["Totes", ...subjects].map(s =>
+    `<button type="button" aria-pressed="${s===filter}" data-s="${esc(s)}">${esc(s)}</button>`).join("");
+  chips.querySelectorAll("button").forEach(b => b.onclick = () => { filter = b.dataset.s; renderChips(); render(); });
+}
+
+function render(){
+  const q = norm(document.getElementById("q").value.trim());
+  const items = TEMES.filter(t =>
+    (filter === "Totes" || t.assignatura === filter) &&
+    (!q || norm([t.titol, t.descripcio, t.assignatura, t.curs||""].join(" ")).includes(q)));
+  const list = document.getElementById("list");
+  if (!items.length) { list.innerHTML = `<p class="empty">Cap tema coincideix amb la cerca.</p>`; return; }
+  const groups = subjects.filter(s => items.some(t => t.assignatura === s));
+  list.innerHTML = groups.map(s => {
+    const its = items.filter(t => t.assignatura === s).sort((a,b) => (a.ordre??99) - (b.ordre??99));
+    return `<section><h2>${esc(s)}</h2><div class="list">${its.map(t => `
+      <a class="item" href="${esc(t.url)}">
+        <span class="ico" aria-hidden="true">${esc(t.assignatura.slice(0,2))}</span>
+        <span class="txt"><h3>${esc(t.titol)}</h3><p>${esc(t.descripcio)}</p>
+          <span class="meta">${t.nou ? '<span class="pill new">Nou</span>' : ""}${t.curs ? `<span class="pill">${esc(t.curs)}</span>` : ""}</span>
+        </span>
+        <span class="go" aria-hidden="true">›</span>
+      </a>`).join("")}</div></section>`;
+  }).join("");
+}
+
+document.getElementById("q").addEventListener("input", render);
+renderChips(); render();
+</script>
+</body>
+</html>

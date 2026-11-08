@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Estudia: La Revolució Industrial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* Pla: app d'una columna, capçalera fina, navegació inferior tipus mòbil; to de fosa (ferro + taronja de forn). */
+:root{
+  --bg:#eceef0; --surface:#ffffff; --ink:#1d242b; --muted:#5b6670; --line:#d4d9dd;
+  --accent:#c2410c; --accent-soft:#fbe4d8; --on-accent:#ffffff;
+  --good:#2b7a4b; --good-soft:#dcefe3; --warn:#9a6212; --warn-soft:#f6ead2;
+  --display:"Bitter", Georgia, serif; --body:"Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#13171b; --surface:#1c2227; --ink:#e6e9ec; --muted:#9aa4ad; --line:#2d353c;
+    --accent:#f07a3a; --accent-soft:#3a2418; --on-accent:#1a0f08;
+    --good:#5cc08a; --good-soft:#17301f; --warn:#e2b04f; --warn-soft:#33280f;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#13171b; --surface:#1c2227; --ink:#e6e9ec; --muted:#9aa4ad; --line:#2d353c;
+  --accent:#f07a3a; --accent-soft:#3a2418; --on-accent:#1a0f08;
+  --good:#5cc08a; --good-soft:#17301f; --warn:#e2b04f; --warn-soft:#33280f;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.5;-webkit-text-size-adjust:100%}
+h1,h2,h3{font-family:var(--display);line-height:1.2;text-wrap:balance;margin:0}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.app{display:flex;flex-direction:column;min-height:100%}
+header.top{position:sticky;top:0;z-index:5;background:var(--ink);color:var(--bg);padding:calc(env(safe-area-inset-top) + 10px) 16px 10px;display:flex;align-items:center;gap:10px}
+header.top h1{font-size:17px;font-weight:700;flex:1}
+header.top .home{color:inherit;font-size:15px;font-weight:600;text-decoration:none;border:1px solid currentColor;border-radius:8px;padding:4px 10px;opacity:.85}
+header.top .back{background:none;border:0;color:inherit;font-size:15px;padding:6px 8px;margin-left:-8px;border-radius:8px;cursor:pointer;display:none}
+header.top .back.show{display:block}
+main{flex:1;width:100%;max-width:720px;margin:0 auto;padding:16px 16px calc(96px + env(safe-area-inset-bottom))}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:4px 4px calc(4px + env(safe-area-inset-bottom))}
+nav.tabs button{background:none;border:0;padding:6px 2px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12px;color:var(--muted);cursor:pointer;border-radius:10px}
+nav.tabs button svg{width:22px;height:22px}
+nav.tabs button[aria-current="page"]{color:var(--accent);font-weight:700}
+.stack{display:flex;flex-direction:column;gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+.eyebrow{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.lead{color:var(--muted);margin:4px 0 0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:11px 16px;font-weight:600;cursor:pointer;min-height:46px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.ghost{background:transparent}
+.btn.small{min-height:36px;padding:6px 12px;font-size:15px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.row.split{justify-content:space-between}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px}
+.stat b{display:block;font-family:var(--display);font-size:26px;font-variant-numeric:tabular-nums}
+.stat span{font-size:13px;color:var(--muted)}
+.pill{display:inline-block;font-size:13px;font-weight:600;padding:2px 9px;border-radius:999px;background:var(--bg);color:var(--muted);border:1px solid var(--line);white-space:nowrap}
+.pill.good{background:var(--good-soft);color:var(--good);border-color:transparent}
+.pill.warn{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.pill.acc{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+.qitem{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;cursor:pointer}
+.qitem .num{font-family:var(--display);font-weight:700;color:var(--accent);min-width:26px;font-variant-numeric:tabular-nums}
+.qitem .txt{flex:1}
+.qitem .txt b{display:block;font-weight:600;line-height:1.35}
+.qitem .meta{margin-top:6px}
+/* Temari */
+details.sec{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+details.sec>summary{list-style:none;cursor:pointer;padding:14px 16px;display:flex;gap:12px;align-items:baseline}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary .n{font-family:var(--display);color:var(--accent);font-weight:700;min-width:22px}
+details.sec>summary h2{font-size:18px;flex:1}
+details.sec>summary .chev{color:var(--muted);transition:transform .2s}
+details.sec[open]>summary .chev{transform:rotate(90deg)}
+.secbody{padding:0 16px 16px;border-top:1px solid var(--line)}
+.secbody h3{font-size:16px;margin:16px 0 6px;color:var(--ink)}
+.secbody ul{margin:0;padding-left:20px}
+.secbody li{margin:4px 0}
+.secbody li b{color:var(--accent)}
+.secbody .practice{margin-top:14px}
+/* Redacció */
+.qhead h2{font-size:21px;margin-top:4px}
+textarea{width:100%;min-height:260px;border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--surface);color:var(--ink);font:inherit;line-height:1.55;resize:vertical}
+.timer{font-family:var(--display);font-variant-numeric:tabular-nums;font-size:20px;font-weight:700}
+.timer.low{color:var(--accent)}
+.checks{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+.checks li label{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line);border-radius:12px;cursor:pointer;background:var(--surface)}
+.checks li label.on{border-color:var(--good);background:var(--good-soft)}
+.checks input{width:20px;height:20px;margin-top:2px;accent-color:var(--good);flex:none}
+.checks .auto{font-size:12px;color:var(--good);font-weight:700;display:block}
+.score{font-family:var(--display);font-size:40px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
+.bar{height:10px;background:var(--bg);border-radius:999px;overflow:hidden;border:1px solid var(--line)}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:999px}
+.hint{background:var(--warn-soft);color:var(--ink);border-radius:12px;padding:10px 12px;border-left:4px solid var(--warn)}
+ol.guio{padding-left:22px;margin:8px 0 0}
+ol.guio li{margin:6px 0}
+/* Targetes */
+.flash{perspective:1200px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.flash .inner{position:relative;min-height:240px;transition:transform .45s;transform-style:preserve-3d}
+.flash.flipped .inner{transform:rotateY(180deg)}
+.flash .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px;display:flex;flex-direction:column;justify-content:center;gap:8px}
+.flash .front h2{font-size:26px}
+.flash .back{transform:rotateY(180deg);border-color:var(--accent)}
+.flash .back p{margin:0;font-size:18px}
+.seg{display:flex;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:3px;gap:3px}
+.seg button{flex:1;border:0;background:none;padding:8px;border-radius:9px;font-weight:600;font-size:15px;cursor:pointer;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+/* Cronologia */
+.tl{list-style:none;margin:0;padding:0;position:relative}
+.tl:before{content:"";position:absolute;left:58px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl li{display:flex;gap:16px;align-items:flex-start;padding:8px 0}
+.tl .y{width:44px;text-align:right;font-family:var(--display);font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;flex:none}
+.tl .dot{width:12px;height:12px;border-radius:50%;background:var(--accent);margin-top:6px;flex:none;position:relative;left:-3px;box-shadow:0 0 0 3px var(--bg)}
+.tl .ev{flex:1}
+.tl .ev.hid{color:transparent;background:var(--line);border-radius:6px;cursor:pointer;user-select:none}
+.order{display:flex;flex-direction:column;gap:8px}
+.order button{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:12px;cursor:pointer;display:flex;gap:10px;align-items:flex-start}
+.order button .badge{min-width:26px;height:26px;border-radius:50%;border:2px solid var(--line);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex:none}
+.order button.picked .badge{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.order button.ok{border-color:var(--good);background:var(--good-soft)}
+.order button.ko{border-color:var(--accent);background:var(--accent-soft)}
+.order .yr{margin-left:auto;font-family:var(--display);font-weight:700;color:var(--muted)}
+.esquema{list-style:none;padding:0;margin:0;display:flex;flex-direction:column}
+.esquema li button{width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:10px 2px;display:flex;gap:10px;cursor:pointer}
+.esquema li:last-child button{border-bottom:0}
+.esquema .n{font-family:var(--display);color:var(--accent);font-weight:700;min-width:20px}
+.muted{color:var(--muted)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.voice{display:flex;gap:10px;align-items:center}
+.btn.rec{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.btn.rec.on{background:var(--accent);color:var(--on-accent)}
+.btn.rec.on .dotrec{animation:pulse 1s infinite}
+.dotrec{width:10px;height:10px;border-radius:50%;background:currentColor;display:inline-block}
+@keyframes pulse{50%{opacity:.25}}
+.dict{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:12px;padding:12px 14px}
+.dict h3{font-size:16px;margin:0 0 6px}
+.dict ol{margin:0;padding-left:20px}
+.dict li{margin:4px 0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <button class="back" id="back" type="button" aria-label="Torna a la llista">‹ Tornar</button>
+    <h1 id="title">La Revolució Industrial</h1>
+    <a class="home" href="../index.html" aria-label="Torna a l’índex de temes">Índex</a>
+  </header>
+  <main id="view" tabindex="-1"></main>
+  <nav class="tabs" aria-label="Seccions">
+    <button type="button" data-tab="inici"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Inici</button>
+    <button type="button" data-tab="temari"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5M8 7h7M8 11h7"/></svg>Temari</button>
+    <button type="button" data-tab="redacta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Redacta</button>
+    <button type="button" data-tab="targetes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v12"/></svg>Targetes</button>
+    <button type="button" data-tab="crono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Dates</button>
+  </nav>
+</div>
+
+<script>
+/* ===================== CONTINGUT (extret dels apunts) ===================== */
+const SECTIONS = [
+ {n:"0", t:"Introducció: què és la Revolució Industrial", subs:[
+  {h:"Definició", b:[
+   "Entre <b>1750 i 1850</b>: la transformació més important des de la <b>Revolució Neolítica</b>.",
+   "Conjunt de canvis que van fer desaparèixer l’<b>Antic Règim econòmic</b> i van implantar el <b>capitalisme industrial</b>.",
+   "Resultat de diverses revolucions paral·leles i connectades que van afectar la vida social, econòmica i política d’Europa."]},
+  {h:"Les revolucions paral·leles", b:[
+   "<b>Demogràfica</b>: més població i urbanització creixent.",
+   "<b>Agrícola</b>: augment de la producció d’aliments.",
+   "<b>Tecnològica</b>: noves fonts d’energia i noves màquines.",
+   "<b>Transport i comerç</b>: producció per a un mercat nacional o internacional.",
+   "<b>Sistema industrial</b> de producció que arracona l’artesanal: primer al <b>tèxtil</b>, després a la <b>siderúrgia</b>."]}
+ ], q:[0,15]},
+ {n:"1", t:"La Revolució Demogràfica", subs:[
+  {h:"1.a El creixement de la població", b:[
+   "Des de la 2a meitat del s. XVIII, Europa surt de l’<b>estancament demogràfic</b> de l’Antic Règim.",
+   "Més ràpida a la <b>Gran Bretanya</b>: de <b>5 a 10 milions</b> durant el s. XVIII.",
+   "<b>Mortalitat</b> en descens: del <b>32‰ (1750) al 23‰ (1800)</b>.",
+   "<b>Natalitat</b> alta i estable, al voltant del <b>34-36‰</b>, fins a la 2a meitat del XIX.",
+   "Causa principal: <b>més aliments</b> gràcies a la revolució agrícola → desapareixen les <b>fams</b>, la població resisteix millor les malalties i retrocedeixen epidèmies i pestes.",
+   "La medicina i la higiene no hi van influir de debò fins ben entrat el s. XIX.",
+   "Esperança de vida: uns <b>50 anys</b> a finals del s. XIX als països industrialitzats."]},
+  {h:"1.b Èxode rural i procés urbanitzador", b:[
+   "Més població al camp + <b>mecanització</b> dels conreus → pagesos expulsats que van a les ciutats atrets per la demanda de mà d’obra de la indústria.",
+   "La societat passa de <b>agrària i rural</b> a <b>industrial i urbana</b>.",
+   "1740-1850: gairebé <b>2 milions</b> d’anglesos es traslladen a les ciutats.",
+   "<b>Londres</b>: uns 50.000 habitants el 1750 i gairebé <b>1 milió</b> a principis del XIX, la concentració humana més gran del món.",
+   "La ciutat és el centre econòmic (bancs, fàbriques, oficines). Barris jerarquitzats: <b>burgesia al centre</b>, fàbriques als voltants.",
+   "Barris obrers <b>insalubres</b>: especulació, amuntegament, <b>barraquisme</b>, carrers sense asfaltar, sense clavegueram, fum i epidèmies.",
+   "Segona direcció migratòria: <b>emigració a ultramar</b>, generalitzada ben entrat el s. XIX."]},
+  {h:"1.c Revolució demogràfica i industrialització", b:[
+   "Aporta <b>mà d’obra abundant</b> i més <b>compradors</b> → creix la demanda, pugen els preus i els productors s’expandeixen.",
+   "Però més població només estimula l’economia si hi ha un augment paral·lel de la <b>producció</b>; si no, porta estancament, pobresa i emigració.",
+   "Exemple: el contrast entre <b>Anglaterra</b> i <b>Irlanda</b>."]}
+ ], q:[1,2]},
+ {n:"2", t:"Les transformacions agrícoles", subs:[
+  {h:"Punt de partida", b:[
+   "Més demanda d’aliments i preus alts estimulen els propietaris a produir més.",
+   "Obstacles de l’Antic Règim: l’<b>openfield</b> (parcel·lació excessiva, conreus obligatoris, drets comunitaris) i unes <b>tècniques endarrerides</b>.",
+   "Solució: tancament de propietats + noves tècniques = <b>revolució agrícola</b>."]},
+  {h:"2.a Les enclosures (camps closos)", b:[
+   "Els grans propietaris demanen al <b>Parlament</b> encerclar terres; es promulguen les <b>enclosure acts</b>.",
+   "Els camps oberts i les <b>terres comunals</b> esdevenen terres tancades i privades.",
+   "Guanyen els <b>grans propietaris</b> (tenien capital i es van quedar terres comunals).",
+   "Perden els <b>petits propietaris</b> (han de vendre) i els <b>pagesos pobres</b> (perden els drets comunals) → acaben emigrant a les ciutats.",
+   "Fi dels camps oberts: explotacions més grans i individuals, on el propietari pot innovar, contractar assalariats o canviar de conreu."]},
+  {h:"2.b Noves tècniques i mètodes", b:[
+   "<b>Sistema Norfolk</b>: s’abandona la <b>rotació triennal</b> i el <b>guaret</b> se substitueix per llegums i farratges → <b>+1/3</b> de superfície conreada.",
+   "Els farratges alimenten el bestiar tot l’any → creix la <b>ramaderia</b> → més <b>adobs animals</b> → sòl més productiu.",
+   "<b>Jethro Tull</b>: sembra en solcs rectes on pot passar una arada tirada per cavalls (sembrar i treure males herbes mecànicament).",
+   "<b>Arada de Rotherham</b>: triangular, remou la terra fàcilment i enfonsa més les llavors.",
+   "Nous productes: <b>patata</b> i <b>blat de moro</b> → millor dieta.",
+   "La producció s’orienta al <b>mercat nacional i internacional</b>: especialització i fi del pagès autosuficient."]}
+ ], q:[3]},
+ {n:"3", t:"Noves tècniques i noves fonts d’energia", subs:[
+  {h:"Factors de la mecanització", b:[
+   "Demanda molt alta, empresaris disposats a invertir i treballadors sobrants del camp.",
+   "S’innova per produir més, reduir costos i ampliar mercats: per guanyar més."]},
+  {h:"3.a L’energia de vapor", b:[
+   "Obstacle: dependència de les energies tradicionals (<b>animal, humana, eòlica</b>).",
+   "Primer avenç: <b>energia hidràulica</b> amb rodes als rius → les primeres fàbriques, a la riba dels rius.",
+   "<b>James Watt</b> patenta la <b>màquina de vapor el 1769</b>. Origen: la mineria del carbó, on la <b>màquina de Newcomen</b> ja bombava aigua; Watt la perfecciona.",
+   "<b>1785</b>: primera filatura amb vapor. <b>1800</b>: unes <b>500</b> màquines de vapor a Anglaterra.",
+   "Abarateix costos: filar una lliura de fil costava <b>38 xílings (1786)</b> i <b>2 xílings (1832)</b>.",
+   "També revoluciona el transport: <b>ferrocarrils i vaixells</b>."]},
+  {h:"3.b Maquinisme i sistema fabril", b:[
+   "Les màquines substitueixen el treball manual. Primeres innovacions al <b>tèxtil</b> (anys 1730): <b>llançadora volant de Kay</b>, primeres filadores mecàniques.",
+   "L’energia hidràulica i de vapor obliga a concentrar obrers i màquines en grans establiments: la <b>fàbrica</b> substitueix el taller artesà.",
+   "La concentració també respon a la voluntat dels empresaris de <b>controlar</b> la producció i els treballadors.",
+   "Empitjoren les condicions de treball i hi ha <b>atur</b>: teixidors manuals d’<b>800.000 (1800)</b> a <b>200.000 (1834)</b>.",
+   "<b>Ludisme</b>: revoltes que destrueixen i cremen màquines i fàbriques; fort a Anglaterra i estès a Europa."]}
+ ], q:[4,5]},
+ {n:"4", t:"La Revolució Comercial", subs:[
+  {h:"4.a Mercat nacional i comerç exterior", b:[
+   "La producció en massa necessita consumidors i mercats nous, dins i fora del país.",
+   "Mercat interior ampliat per: creixement de la població, més <b>capacitat adquisitiva dels pagesos</b> i millors <b>transports</b>.",
+   "Com que el mercat interior creixia lentament, la demanda inicial va venir del <b>mercat exterior</b>, sobretot de les <b>colònies</b>.",
+   "Viratge 1750-1800: el comerç s’orienta a les colònies i Anglaterra deixa de ser <b>re-exportadora</b> per vendre productes industrials propis.",
+   "El <b>cotó</b> depenia molt de l’exportació. Indústries per al mercat interior: <b>+7%</b>; per a l’exportació: <b>+70%</b>.",
+   "El <b>govern britànic</b> finança la conquesta de mercats; les guerres del XVIII donen el <b>monopoli colonial</b> i la <b>supremacia naval</b>."]},
+  {h:"4.b Lliurecanvisme i proteccionisme", b:[
+   "Els britànics, primers en indústria, defensen el <b>lliure canvi</b>: llibertat de comerç i supressió dels <b>aranzels</b>, que encareixen els productes.",
+   "Els estats endarrerits veuen que el lliure canvi afavoreix Anglaterra i defensen el <b>proteccionisme</b> per protegir la indústria nacional.",
+   "Resultat: una dura polèmica entre lliurecanvistes i proteccionistes."]}
+ ], q:[6,7]},
+ {n:"5", t:"Les millores dels sistemes de transport", subs:[
+  {h:"5.a Carreteres i canals", b:[
+   "Vendre lluny exigeix un transport <b>més ràpid i més barat</b>.",
+   "Carreteres: camins cimentats, coberts de grava i amb rases de desguàs; transitables tot l’any. Sobretot d’<b>iniciativa privada</b>.",
+   "El tret més original: el transport <b>fluvial</b>, el més barat i ràpid, amb una xarxa de <b>canals artificials</b> que unia rius i mar."]},
+  {h:"5.b El ferrocarril", b:[
+   "La veritable “revolució del transport”: aplicar la <b>màquina de vapor</b> al transport terrestre i marítim.",
+   "Vagonetes de carbó sobre bigues; rails de ferro des del s. XVII; cap al <b>1767 R. Reynolds</b> crea un carril de ferro colat amb pestanya.",
+   "<b>1829 Stephenson</b> inventa la <b>locomotora</b>, aplicada primer als trens miners (mines-ports).",
+   "<b>1830</b>: primera línia de passatgers, <b>Liverpool-Manchester</b>.",
+   "Vaixells de vapor: primers als <b>EUA el 1807</b>; el <b>1842</b> un vaixell de vapor fa la volta al món.",
+   "El ferrocarril vertebra el <b>mercat interior</b>; acosta persones, facilita migracions, correu i premsa, i crea un àmbit més internacional."]}
+ ], q:[8]},
+ {n:"6", t:"El desenvolupament de la indústria tèxtil", subs:[
+  {h:"Context", b:[
+   "Mecanització i sistema fabril converteixen la Gran Bretanya en el “<b>taller del món</b>”.",
+   "Segons els apunts, el tèxtil és el motor a la primera fase i la <b>siderúrgia</b> en pren el relleu després."]},
+  {h:"6.a El naixement de la indústria del cotó", b:[
+   "Lligada al <b>comerç colonial</b>: el cotó venia de l’<b>Índia</b>.",
+   "Cap al <b>1700</b>, per pressió dels <b>llaners</b>, es prohibeix importar <b>indianes</b> (teixits de cotó estampats) → els anglesos estampen cotó blanc.",
+   "Cap al <b>1750</b> es prohibeix importar qualsevol teixit de cotó → els anglesos fan tota l’elaboració.",
+   "Centre: el <b>Lancashire</b>. Cotó primer de les Índies Orientals i, a finals del XVIII, de les <b>plantacions esclavistes dels EUA</b>, molt més barat.",
+   "El cotó desbanca la <b>llana</b>; gairebé tota la producció s’exporta."]},
+  {h:"6.b La mecanització del tèxtil", b:[
+   "<b>1733</b>: <b>llançadora volant de J. Kay</b> al teler manual → desequilibri: calien 3 o 4 filadors per fornir un teixidor.",
+   "Tres innovacions del filat: <b>spinning jenny</b> (Hargreaves, <b>1760</b>, fusos múltiples), <b>water frame</b> (Arkwright, <b>1768</b>, energia hidràulica, moviment continu) i <b>mule jenny</b> (Crompton, <b>1779</b>, aviat amb vapor).",
+   "Ara sobra fil: el <b>teler mecànic de Cartwright (1785)</b> torna a equilibrar filat i teixit.",
+   "Cost, qualitat i volum permeten conquerir els <b>mercats internacionals</b>."]},
+  {h:"6.c El finançament de les noves indústries", b:[
+   "<b>Teoria tradicional</b>: capital procedent dels guanys del <b>comerç ultramarí</b> (capital extern al procés industrial).",
+   "<b>Teoria més recent</b>: <b>autofinançament</b>; petits capitals d’origen agrícola i beneficis del <b>30-40%</b> reinvertits."]}
+ ], q:[9,10]},
+ {n:"7", t:"El creixement de la siderúrgia", subs:[
+  {h:"7.a Ferro i carbó", b:[
+   "El tèxtil fa <b>béns de consum</b>; la siderúrgia és el segon esglaó perquè proporciona les <b>màquines</b>.",
+   "Abans: poc ferro i fet amb <b>carbó vegetal</b>, car i de poc poder calorífic.",
+   "La demanda de ferro per a <b>vaixells i municions</b> empeny a buscar un combustible més barat.",
+   "<b>A. Darby (1732)</b>: <b>carbó de coc</b> a l’alt forn → uneix carbó i ferro.",
+   "Bigues de ferro a les mines, rails i vagonetes → més extracció; el <b>carbó</b> és la gran font d’energia del s. XIX.",
+   "<b>Henry Cort (1783)</b>: <b>pudelació i laminatge</b>, elimina escòries i lamina el ferro.",
+   "<b>J. Neilson (1829)</b>: forn d’injecció d’aire calent que converteix el ferro en <b>acer</b> (dur i flexible): locomotores, rails…",
+   "El <b>ferrocarril</b> dona l’impuls definitiu: molta demanda i transport ràpid i barat de carbó i ferro."]},
+  {h:"7.b Els nous sistemes de finançament", b:[
+   "Mines, siderúrgia i ferrocarril necessiten capitals molt més grans que el tèxtil; les empreses familiars no hi arriben.",
+   "<b>Societats anònimes per accions</b>; accions i obligacions fan de la <b>borsa</b> un mercat de capitals i un baròmetre econòmic.",
+   "Els <b>bancs</b> financen la indústria (préstecs, inversió en borsa), agilitzen pagaments (<b>lletres de canvi, pagarés, xecs</b>) i emeten moneda.",
+   "Dos tipus: <b>bancs d’inversió</b> i <b>bancs de dipòsit</b>.",
+   "L’Estat crea <b>bancs nacionals</b>, que acaben monopolitzant el paper moneda."]}
+ ], q:[11,10]},
+ {n:"8", t:"Conseqüències econòmiques i socials", subs:[
+  {h:"Idea general", b:[
+   "El sistema fabril va lligat al <b>capitalisme industrial</b> i a la <b>societat de classes</b>.",
+   "Divisió entre <b>capital i treball</b>, apropiació individual dels beneficis, reinversió i innovació tècnica."]},
+  {h:"8.a Liberalisme econòmic", b:[
+   "La <b>burgesia</b> necessita una ideologia: l’<b>escola clàssica</b> o <b>Escola de Manchester</b> (final del XVIII).",
+   "<b>Adam Smith</b>, 1776, <i>La riquesa de les nacions</i>: l’<b>interès personal</b> coincideix amb el general; el <b>mecanisme dels preus</b> ajusta oferta i demanda; l’<b>Estat no ha d’intervenir</b> (fora proteccionisme i monopolis). Visió optimista.",
+   "<b>David Ricardo</b>: el treball és una mercaderia; si hi ha més treballadors, baixen els salaris. <b>Llei del salari natural</b>: el salari tendeix al mínim per sobreviure. Critica l’acumulació de capital.",
+   "<b>Robert Malthus</b>: la població creix més de pressa que els recursos → cal reduir la natalitat. Visió pessimista."]},
+  {h:"8.b Capitalisme i societat de classes", b:[
+   "<b>Propietat privada</b> dels mitjans de producció, concentrada en poques mans; la majoria només té la seva <b>força de treball</b> i la ven per un <b>salari</b>.",
+   "Els treballadors produeixen més del que cobren: l’<b>excedent</b>, base del benefici.",
+   "Sistema d’<b>iniciativa lliure</b>, no planificat, que busca el màxim benefici, amb competència i llei de l’<b>oferta i la demanda</b>, sense intervenció de l’Estat.",
+   "<b>Crisis cícliques</b>: les crisis de subsistència són substituïdes per les de <b>sobreproducció</b>; l’<b>atur</b> n’és la conseqüència més dura.",
+   "De la <b>societat estamental</b> a la <b>societat de classes</b>: <b>burgesia</b> (mitjans de producció) i <b>proletariat</b> (força de treball)."]}
+ ], q:[12,13]},
+ {n:"9", t:"L’expansió de la Revolució Industrial", subs:[
+  {h:"Una expansió desigual", b:[
+   "Entre finals del XVIII i cap al <b>1880</b>, de manera molt desigual.",
+   "Anglaterra és el <b>model clàssic</b> i el mirall, però els punts de partida i la competència fan que cada país s’industrialitzi a la seva manera.",
+   "A la 1a meitat del XIX la distància amb Anglaterra encara és gran.",
+   "Primers al continent: <b>França i Bèlgica</b>; després <b>Alemanya, Països Baixos i Suïssa</b>.",
+   "<b>Europa mediterrània</b>: tard (final del XIX), amb mancances i desequilibris regionals.",
+   "<b>Europa oriental</b>: continua amb l’Antic Règim per les estructures senyorials; només lleugera indústria a <b>Polònia, Sant Petersburg i Moscou</b>.",
+   "Fora d’Europa: <b>EUA i Japó</b>, potències industrials a inicis del s. XX.",
+   "La preponderància britànica minva: primer la supera <b>Alemanya</b> i després els <b>EUA</b>."]}
+ ], q:[14]}
+];
+
+/* Preguntes de desenvolupament. Cada punt: [text, paraules clau separades per "/", mínim de coincidències] */
+const QUESTIONS = [
+ {sec:0, min:10, q:"Explica què va ser la Revolució Industrial i quines revolucions paral·leles la van fer possible.", p:[
+  ["Període 1750-1850: la transformació més gran des de la Revolució Neolítica","1750/1850/neolit",1],
+  ["Fi de l’Antic Règim econòmic i implantació del capitalisme industrial","antic regim/capitalisme",1],
+  ["Revolució demogràfica: més població i urbanització","demograf/poblacio",1],
+  ["Revolució agrícola: més producció d’aliments","agricol/aliment",1],
+  ["Revolució tecnològica: noves fonts d’energia i noves màquines","tecnolog/energia/maquin",1],
+  ["Revolució dels transports i del comerç: mercat nacional i internacional","transport/comerc",1],
+  ["Sistema industrial (fabril) que substitueix l’artesanal: primer tèxtil, després siderúrgia","textil/siderurg/fabri",1],
+  ["Les revolucions estan connectades entre si i afecten la vida social, econòmica i política","connect/relacion/paralel",1]
+ ]},
+ {sec:1, min:15, q:"Explica la revolució demogràfica: com i per què va créixer la població i quina relació té amb la industrialització.", p:[
+  ["Des de la 2a meitat del s. XVIII es trenca l’estancament demogràfic de l’Antic Règim","estancament/segle xviii/xviii",1],
+  ["Gran Bretanya: de 5 a 10 milions d’habitants al s. XVIII","10 milions/5 milions/duplic",1],
+  ["Baixa la mortalitat: del 32‰ (1750) al 23‰ (1800)","mortalitat/32/23",1],
+  ["La natalitat es manté alta (34-36‰)","natalitat/34/36",1],
+  ["Causa: més aliments (revolució agrícola), fi de les fams, més resistència a les malalties","aliment/fam/epidemi/malalt",1],
+  ["La medicina i la higiene no hi influeixen fins ben entrat el s. XIX","medicin/higiene",1],
+  ["Esperança de vida d’uns 50 anys a final del s. XIX","esperanca de vida/50 anys",1],
+  ["Aporta mà d’obra i més compradors (més demanda i preus més alts)","ma d.obra/treballadors/comprador/demanda",1],
+  ["Només és un estímul si creix també la producció (Anglaterra vs Irlanda)","irlanda/produccio",1]
+ ]},
+ {sec:1, min:12, q:"Descriu l’èxode rural i el procés d’urbanització durant la Revolució Industrial.", p:[
+  ["Causes: més població al camp i mecanització, pagesos expulsats","mecanitz/expuls/pages",1],
+  ["Atracció de la mà d’obra que necessita la indústria","ma d.obra/feina/industria",1],
+  ["De societat agrària i rural a industrial i urbana","rural/urbana",2],
+  ["Gairebé 2 milions d’anglesos a les ciutats (1740-1850)","2 milions/dos milions",1],
+  ["Londres: de 50.000 a gairebé 1 milió d’habitants","londres",1],
+  ["La ciutat, centre econòmic; barris jerarquitzats (burgesia al centre, fàbriques als voltants)","burgesia/centre/jerarqu",1],
+  ["Barris obrers insalubres: amuntegament, barraquisme, sense clavegueram, epidèmies","insalubr/barraqu/amuntega/claveguer",1],
+  ["Emigració també a ultramar, generalitzada ben entrat el XIX","ultramar/altres paisos",1]
+ ]},
+ {sec:2, min:15, q:"Explica la revolució agrícola britànica: obstacles, enclosures i noves tècniques.", p:[
+  ["Més demanda i preus alts estimulen la producció","demanda/preus",1],
+  ["Obstacle: l’openfield (parcel·lació, conreus obligatoris, drets comunitaris)","openfield/camps oberts/parcellacio",1],
+  ["Obstacle: tècniques i eines endarrerides","endarrer/tecniques",1],
+  ["Enclosure acts del Parlament: tancar camps oberts i comunals","enclosure/tancament/closos/parlament",1],
+  ["Guanyen els grans propietaris; perden petits propietaris i pagesos pobres, que emigren","grans propietaris/petits propietaris/pagesos pobres",1],
+  ["Sistema Norfolk: fi de la rotació triennal i del guaret (+1/3 de terra)","norfolk/guaret/triennal",1],
+  ["Farratges → més ramaderia → més adobs animals","ramader/adob/bestiar",1],
+  ["Jethro Tull (sembra en solcs) i arada de Rotherham","tull/rotherham/solcs/arada",1],
+  ["Nous conreus: patata i blat de moro","patata/blat de moro",1],
+  ["Especialització i producció per al mercat; fi del pagès autosuficient","autosufic/especialitz/mercat",1]
+ ]},
+ {sec:3, min:12, q:"Explica la importància de la màquina de vapor i de les noves fonts d’energia.", p:[
+  ["Factors: demanda, capitals per invertir i mà d’obra sobrant","demanda/capital/inverti",1],
+  ["Dependència de les energies tradicionals (animal, humana, eòlica)","tradicional/animal/eolic",1],
+  ["Energia hidràulica: rodes, fàbriques a la riba dels rius","hidraulic/rius/rodes",1],
+  ["James Watt patenta la màquina de vapor el 1769","watt/1769",1],
+  ["Origen a les mines de carbó: màquina de Newcomen per bombar aigua","newcomen/mines/bombar",1],
+  ["1785 primera filatura amb vapor; el 1800 unes 500 màquines","1785/500/filatura",1],
+  ["Més producció i menys costos (38 → 2 xílings la lliura de fil)","xiling/costos/abarat",1],
+  ["Aplicació al transport: ferrocarril i vaixells","ferrocarril/vaixell/tren",1]
+ ]},
+ {sec:3, min:12, q:"Què va ser el sistema fabril? Explica el maquinisme i la reacció del ludisme.", p:[
+  ["Les màquines substitueixen el treball manual","substitu/manual",1],
+  ["Les primeres innovacions al tèxtil (llançadora volant de Kay)","kay/llancadora/textil",1],
+  ["L’energia (aigua/vapor) obliga a concentrar obrers i màquines: neix la fàbrica","fabrica/concentr",1],
+  ["La fàbrica substitueix el taller artesà","taller/artes",1],
+  ["Voluntat dels empresaris de controlar producció i treballadors","control",1],
+  ["Pitjors condicions de treball i atur (de 800.000 a 200.000 teixidors manuals)","condicions/atur/800.000/200.000/800000",1],
+  ["Ludisme: destrucció i incendi de màquines, a Anglaterra i a Europa","ludis/destru/crema/incendi",1]
+ ]},
+ {sec:4, min:12, q:"Explica la revolució comercial: el mercat interior i el comerç exterior britànic.", p:[
+  ["La producció en massa necessita nous mercats","produccio en massa/nous mercats/mercats nous",1],
+  ["Mercat interior: més població, poder adquisitiu dels pagesos, transport","interior/adquisitiu/poder de compra",1],
+  ["El mercat interior creix lentament: la demanda clau ve de l’exterior","exterior/lent",1],
+  ["Les colònies com a gran mercat","colon",1],
+  ["Anglaterra deixa de re-exportar i ven productes industrials propis","re-export/reexport/propis",1],
+  ["Cotó molt exportador: +7% (interior) vs +70% (exportació)","70/7%/cot",1],
+  ["El govern i les guerres: monopoli colonial i supremacia naval","govern/guerre/naval/monopoli",1]
+ ]},
+ {sec:4, min:8, q:"Compara el lliurecanvisme i el proteccionisme. Qui defensava cada postura i per què?", p:[
+  ["Els britànics, primers en indústria, defensen el lliure canvi","lliure canvi/lliurecanv/britan/anglaterra",1],
+  ["Lliure canvi: llibertat de comerç i supressió d’aranzels","aranzel/duan",1],
+  ["Els aranzels encareixen els productes i frenen vendes i producció","encareix/mes cars/preu",1],
+  ["Els països endarrerits veuen que el lliure canvi afavoreix Anglaterra","endarrer/afavoreix/beneficia",1],
+  ["Proteccionisme: protegir la indústria nacional de la competència estrangera","protecc/competencia/nacional",1],
+  ["Polèmica entre les dues postures","polemic/debat/enfront",1]
+ ]},
+ {sec:5, min:12, q:"Explica les millores dels transports i la importància del ferrocarril.", p:[
+  ["Calia un transport més ràpid i barat per vendre a mercats llunyans","rapid/barat",1],
+  ["Carreteres millorades (grava, desguàs), d’iniciativa privada","carreter/grava/privada",1],
+  ["Canals artificials: transport fluvial, el més barat","canal/fluvial",1],
+  ["Rails de ferro: Reynolds (1767)","reynol/rails/1767",1],
+  ["Stephenson inventa la locomotora (1829)","stephenson/locomotora/1829",1],
+  ["Primera línia de passatgers Liverpool-Manchester (1830)","liverpool/manchester/1830",1],
+  ["Vaixells de vapor: EUA 1807, volta al món 1842","vaixell/1807/1842",1],
+  ["Conseqüències: vertebra el mercat interior, mobilitat, correu i premsa, internacionalització","mercat interior/correu/premsa/moviments",1]
+ ]},
+ {sec:6, min:15, q:"Explica el naixement i la mecanització de la indústria cotonera britànica.", p:[
+  ["Lligada al comerç colonial: el cotó venia de l’Índia","india/colonial",1],
+  ["Prohibició d’importar indianes (c. 1700) i després qualsevol teixit de cotó (c. 1750)","prohib/indianes",1],
+  ["Concentració al Lancashire; cotó de les plantacions esclavistes dels EUA","lancashire/esclav/plantac",1],
+  ["El cotó desbanca la llana i s’exporta gairebé tot","llana/export",1],
+  ["Llançadora volant de Kay (1733): desequilibri entre teixir i filar","kay/llancadora/1733/desequilibri",1],
+  ["Spinning jenny (Hargreaves, 1760)","spinning/hargreaves/1760",1],
+  ["Water frame (Arkwright, 1768)","water frame/arkwright/1768",1],
+  ["Mule jenny (Crompton, 1779)","mule/crompton/1779",1],
+  ["Teler mecànic de Cartwright (1785) reequilibra","cartwright/teler mecanic",1],
+  ["Resultat: Gran Bretanya conquereix els mercats internacionals (“taller del món”)","taller del mon/mercats internacionals/conquer",1]
+ ]},
+ {sec:6, min:12, q:"D’on va sortir el capital per finançar la industrialització? Compara el tèxtil i la siderúrgia.", p:[
+  ["Teoria tradicional: guanys del comerç ultramarí (capital extern)","ultramar/tradicional/extern",1],
+  ["Teoria recent: autofinançament amb petits capitals agrícoles","autofinan/agricol/petits capitals",1],
+  ["Beneficis molt alts (30-40%) que es reinvertien","30/40/reinver",1],
+  ["Siderúrgia, mines i ferrocarril necessiten capitals molt més grans","grans sumes/capitals molt/elevat/siderurg",1],
+  ["Societats anònimes per accions","anonim/accions",1],
+  ["La borsa com a mercat de capitals i baròmetre","borsa",1],
+  ["Bancs: préstecs, paper moneda, lletres de canvi, xecs; d’inversió i de dipòsit","banc/prestec/xec",1],
+  ["Bancs nacionals amb el monopoli del paper moneda","nacional/monopol/paper moneda",1]
+ ]},
+ {sec:7, min:12, q:"Explica el creixement de la siderúrgia i la seva relació amb el carbó i el ferrocarril.", p:[
+  ["El tèxtil fa béns de consum; la siderúrgia proporciona màquines (segon esglaó)","bens de consum/segon/maquines",1],
+  ["Abans: poc ferro i carbó vegetal car i poc calorífic","carbo vegetal/calorif",1],
+  ["Demanda de ferro per a vaixells i municions","municion/vaixells",1],
+  ["Darby (1732): carbó de coc a l’alt forn, unió carbó-ferro","darby/coc/1732/alt forn",1],
+  ["El carbó, gran font d’energia del s. XIX","font d.energia/carbo",1],
+  ["Cort (1783): pudelació i laminatge","cort/pudela/lamina/1783",1],
+  ["Neilson (1829): aire calent i acer","neilson/acer/aire calent",1],
+  ["El ferrocarril, impuls definitiu (demanda i transport barat)","ferrocarril/rails/locomotor",1]
+ ]},
+ {sec:8, min:12, q:"Explica el liberalisme econòmic i les idees d’Adam Smith, David Ricardo i Robert Malthus.", p:[
+  ["La burgesia necessita una ideologia: escola clàssica o de Manchester","burgesia/escola classica/manchester",1],
+  ["Adam Smith (1776), La riquesa de les nacions","smith/1776/riquesa",1],
+  ["L’interès personal coincideix amb l’interès general","interes personal/interes general/interes individual",1],
+  ["El mecanisme dels preus ajusta l’oferta i la demanda","preus/oferta/demanda",1],
+  ["L’Estat no ha d’intervenir; fora proteccionisme i monopolis","estat/interven",2],
+  ["Visió optimista de Smith davant la pessimista dels altres","optimis/pessimis",1],
+  ["Ricardo: el treball és una mercaderia; llei del salari natural","ricardo/salari natural/mercaderia",1],
+  ["Malthus: la població creix més que els recursos; reduir natalitat","malthus/recursos",1]
+ ]},
+ {sec:8, min:12, q:"Quins són els trets del capitalisme industrial i com va canviar la societat?", p:[
+  ["Propietat privada dels mitjans de producció, concentrada en poques mans","propietat privada/mitjans de produccio/poques mans",1],
+  ["La majoria només té la força de treball i la ven per un salari","forca de treball/salari",1],
+  ["L’excedent, base del benefici capitalista","excedent/benefici",1],
+  ["Iniciativa lliure, sense planificació ni intervenció de l’Estat; oferta i demanda","iniciativa lliure/planific/oferta/competenc",1],
+  ["Crisis cícliques de sobreproducció (abans de subsistència) i atur","crisi/sobreproduc/atur",1],
+  ["Divisió entre capital i treball; reinversió i innovació","capital i treball/reinver/innova",1],
+  ["De la societat estamental a la societat de classes","estamental/societat de classes",1],
+  ["Burgesia (mitjans de producció) i proletariat (força de treball)","proletari",1]
+ ]},
+ {sec:9, min:10, q:"Explica com es va estendre la Revolució Industrial fora de la Gran Bretanya.", p:[
+  ["Des de finals del XVIII fins cap al 1880, de manera desigual","1880/desigual",1],
+  ["Anglaterra és el model, però cada país segueix un camí diferent","model/mirall/dispar",1],
+  ["França i Bèlgica, primers del continent","franca/belgica",1],
+  ["Després Alemanya, Països Baixos i Suïssa","alemanya/suissa/paisos baixos",1],
+  ["Europa mediterrània: tard i amb desequilibris","mediterran",1],
+  ["Europa oriental: estructures senyorials; només Polònia, Sant Petersburg, Moscou","oriental/senyorial/polonia/moscou/petersburg",1],
+  ["EUA i Japó, potències a inicis del s. XX","japo/eua/estats units",1],
+  ["Declivi de l’hegemonia britànica davant Alemanya i els EUA","preponderanc/hegemon/declivi/supera/minva",1]
+ ]},
+ {sec:0, min:45, tema:true, q:"TEMA COMPLET: Desenvolupa el tema «La Revolució Industrial».", p:[
+  ["Introducció: definició (1750-1850), fi de l’Antic Règim i capitalisme industrial","1750/antic regim/capitalisme",2],
+  ["Revolució demogràfica: mortalitat i natalitat, causes, èxode rural i urbanització","mortalitat/natalitat/exode/urbanitz",2],
+  ["Revolució agrícola: enclosures i sistema Norfolk","enclosure/norfolk/guaret/closos",1],
+  ["Noves energies: hidràulica i màquina de vapor de Watt","watt/vapor/hidraulic",2],
+  ["Maquinisme, sistema fabril i ludisme","fabri/ludis/maquinisme",2],
+  ["Revolució comercial: mercat interior, colònies, lliurecanvisme i proteccionisme","colon/lliure canvi/lliurecanv/protecc/mercat interior",2],
+  ["Transports: canals, ferrocarril (Stephenson) i vaixells de vapor","canal/stephenson/locomotora/ferrocarril",2],
+  ["Indústria cotonera: origen colonial i invents (Kay, jenny, water frame, mule, teler)","kay/jenny/water frame/arkwright/cartwright/cot",2],
+  ["Siderúrgia: carbó de coc, pudelació, acer","coc/darby/cort/acer/siderurg",2],
+  ["Finançament: autofinançament, societats anònimes, borsa i bancs","autofinan/anonim/borsa/banc",2],
+  ["Liberalisme econòmic: Smith, Ricardo, Malthus","smith/ricardo/malthus",2],
+  ["Capitalisme i societat de classes: burgesia i proletariat","burgesia/proletari/classes",2],
+  ["Expansió: França, Bèlgica, Alemanya, EUA i Japó","belgica/franca/alemanya/japo",2]
+ ]}
+];
+
+const CARDS = [
+ ["Revolució Industrial","Conjunt de canvis (1750-1850) que van fer desaparèixer l’Antic Règim econòmic i implantar el capitalisme industrial.","Conceptes"],
+ ["Revolució demogràfica","Creixement continu de la població des de la 2a meitat del s. XVIII, per la baixada de la mortalitat amb una natalitat alta.","Conceptes"],
+ ["Mortalitat britànica (1750 i 1800)","Del 32‰ el 1750 al 23‰ el 1800.","Dades"],
+ ["Natalitat britànica","Es manté al voltant del 34-36‰ fins a la 2a meitat del s. XIX.","Dades"],
+ ["Població britànica al s. XVIII","Es duplica: de 5 milions a principis de segle a 10 milions el 1800.","Dades"],
+ ["Per què baixa la mortalitat?","Sobretot per la millora de l’alimentació (revolució agrícola): desapareixen les fams i la gent resisteix millor les malalties. La medicina i la higiene arriben més tard.","Conceptes"],
+ ["Èxode rural","Trasllat de pagesos a les ciutats, expulsats pel creixement de població al camp i la mecanització, i atrets per la feina a la indústria.","Conceptes"],
+ ["Londres","Uns 50.000 habitants el 1750 i gairebé 1 milió a principis del s. XIX.","Dades"],
+ ["Anglaterra vs Irlanda","Exemple que el creixement de població només afavoreix l’economia si creix també la producció.","Conceptes"],
+ ["Openfield","Sistema de camps oberts de l’Antic Règim: parcel·lació excessiva, conreus obligatoris i drets comunitaris.","Conceptes"],
+ ["Enclosures (enclosure acts)","Lleis del Parlament que van permetre tancar camps oberts i terres comunals i convertir-los en propietat privada.","Conceptes"],
+ ["Qui guanya i qui perd amb les enclosures?","Guanyen els grans propietaris. Perden els petits propietaris (venen terres) i els pagesos pobres (perden els drets comunals) i emigren a la ciutat.","Conceptes"],
+ ["Sistema Norfolk","Abandonament de la rotació triennal: el guaret se substitueix per llegums i farratges (+1/3 de superfície conreada).","Conceptes"],
+ ["Jethro Tull","Mètode de sembrar el blat en solcs rectes on passa una arada tirada per cavalls (sembradora).","Personatges"],
+ ["Arada de Rotherham","Arada triangular que remou la terra amb facilitat i enfonsa més les llavors.","Conceptes"],
+ ["James Watt","Patenta la màquina de vapor el 1769, perfeccionant la de Newcomen.","Personatges"],
+ ["Màquina de Newcomen","Precedent de la màquina de Watt, usada a principis del s. XVIII per bombar aigua de les mines.","Conceptes"],
+ ["Cost de filar una lliura de fil","38 xílings el 1786; 2 xílings el 1832.","Dades"],
+ ["Sistema fabril","Concentració d’obrers i màquines en grans establiments (fàbriques) que substitueixen el taller artesà.","Conceptes"],
+ ["Ludisme","Moviment d’obrers i pagesos que destruïen i cremaven màquines i fàbriques per protestar contra la mecanització.","Conceptes"],
+ ["Teixidors manuals a Anglaterra","800.000 el 1800; només 200.000 el 1834.","Dades"],
+ ["Revolució comercial","Creació de nous canals de distribució i mercats (interiors i exteriors) per a la producció en massa.","Conceptes"],
+ ["Mercat interior vs exportació","Les indústries per al mercat interior creixen un 7%; les exportadores, un 70%.","Dades"],
+ ["Lliurecanvisme","Defensa de la llibertat de comerç i de la supressió d’aranzels; el propugnen els britànics.","Conceptes"],
+ ["Proteccionisme","Defensa d’aranzels per protegir la indústria nacional de la competència estrangera; el defensen els països endarrerits.","Conceptes"],
+ ["George Stephenson","Inventa la locomotora el 1829.","Personatges"],
+ ["Primera línia de passatgers","Liverpool-Manchester, 1830.","Dades"],
+ ["Indianes","Teixits de cotó estampats de l’Índia; se’n prohibeix la importació cap al 1700.","Conceptes"],
+ ["Lancashire","Regió on es concentra la indústria cotonera britànica.","Conceptes"],
+ ["Llançadora volant","Invent de John Kay (1733) que accelera el teixit i crea un desequilibri amb el filat.","Conceptes"],
+ ["Spinning jenny","Hargreaves, 1760. Filadora de fusos múltiples.","Conceptes"],
+ ["Water frame","Arkwright, 1768. Filadora moguda per energia hidràulica, de moviment continu.","Conceptes"],
+ ["Mule jenny","Crompton, 1779. Filadora que aviat funciona amb vapor.","Conceptes"],
+ ["Teler mecànic","Cartwright, 1785. Torna a equilibrar filat i teixit.","Conceptes"],
+ ["Autofinançament","Teoria que diu que la indústria tèxtil va créixer reinvertint els seus beneficis (30-40%) i petits capitals agrícoles.","Conceptes"],
+ ["Abraham Darby","El 1732 (segons els apunts) usa carbó de coc a l’alt forn: uneix carbó i ferro.","Personatges"],
+ ["Henry Cort","1783: pudelació i laminatge, per eliminar escòries i laminar el ferro.","Personatges"],
+ ["J. Neilson","1829: forn d’injecció d’aire calent que converteix el ferro en acer.","Personatges"],
+ ["Societat anònima per accions","Forma d’empresa que reuneix grans capitals venent accions.","Conceptes"],
+ ["Borsa de valors","Mercat de capitals on es compren i venen accions i obligacions; baròmetre de l’economia.","Conceptes"],
+ ["Bancs d’inversió i de dipòsit","Els dos grans tipus de bancs que es consoliden al s. XIX.","Conceptes"],
+ ["Escola de Manchester","Escola clàssica que defineix els principis del liberalisme econòmic a finals del s. XVIII.","Conceptes"],
+ ["Adam Smith","1776, La riquesa de les nacions. Interès personal = interès general; el mercat s’autoregula; l’Estat no ha d’intervenir.","Personatges"],
+ ["David Ricardo","El treball és una mercaderia; llei del salari natural: el salari tendeix al mínim per sobreviure.","Personatges"],
+ ["Robert Malthus","La població creix més de pressa que els recursos; cal reduir la natalitat.","Personatges"],
+ ["Capitalisme","Sistema de propietat privada dels mitjans de producció, iniciativa lliure i recerca del màxim benefici, regulat per l’oferta i la demanda.","Conceptes"],
+ ["Excedent","Diferència entre el que produeixen els treballadors i el que cobren; base del benefici capitalista.","Conceptes"],
+ ["Crisis de sobreproducció","Crisis cícliques del capitalisme que substitueixen les antigues crisis de subsistència; provoquen atur.","Conceptes"],
+ ["Societat de classes","Societat jerarquitzada per la propietat: burgesia (mitjans de producció) i proletariat (força de treball).","Conceptes"],
+ ["“Taller del món”","Nom donat a la Gran Bretanya gràcies a la mecanització i el sistema fabril.","Conceptes"],
+ ["Primers països del continent a industrialitzar-se","França i Bèlgica; després Alemanya, Països Baixos i Suïssa.","Dades"]
+];
+
+const EVENTS = [
+ [1700,"Prohibició d’importar indianes a Gran Bretanya (aprox.)"],
+ [1732,"Darby fa servir carbó de coc a l’alt forn"],
+ [1733,"Llançadora volant de John Kay"],
+ [1750,"Prohibició d’importar qualsevol teixit de cotó (aprox.)"],
+ [1760,"Spinning jenny de Hargreaves"],
+ [1767,"Carril de ferro colat de R. Reynolds"],
+ [1768,"Water frame d’Arkwright"],
+ [1769,"Watt patenta la màquina de vapor"],
+ [1776,"Adam Smith publica La riquesa de les nacions"],
+ [1779,"Mule jenny de Crompton"],
+ [1783,"Cort patenta la pudelació i el laminatge"],
+ [1785,"Primera filatura amb vapor i teler mecànic de Cartwright"],
+ [1800,"Unes 500 màquines de vapor a Anglaterra; Gran Bretanya arriba als 10 milions"],
+ [1807,"Primers vaixells de vapor, als EUA"],
+ [1829,"Locomotora de Stephenson i forn d’aire calent de Neilson"],
+ [1830,"Primera línia de passatgers Liverpool-Manchester"],
+ [1834,"Només queden 200.000 teixidors manuals a Anglaterra"],
+ [1842,"Un vaixell de vapor fa la volta al món"],
+ [1880,"Fi aproximada del procés d’expansió industrial a Europa"]
+];
+
+/* ===================== ESTAT ===================== */
+const KEY="ri-estudi-v1";
+let S={drafts:{},best:{},known:[]};
+try{const r=localStorage.getItem(KEY); if(r) S=Object.assign(S,JSON.parse(r));}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+
+const norm=s=>s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/l[·.‧]l/g,"ll").replace(/[’']/g,"'").replace(/\s+/g," ");
+function detect(text,pt){
+  const t=norm(text); const kws=pt[1].split("/");
+  let c=0; for(const k of kws){ const re=new RegExp(k.replace(/[-]/g,"\\-")); if(re.test(t)) c++; }
+  return c>=(pt[2]||1);
+}
+const $=s=>document.querySelector(s);
+const view=$("#view"), titleEl=$("#title"), backBtn=$("#back");
+let timerId=null, backAction=null;
+function esc(s){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+
+function setTab(tab){
+  document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-current",b.dataset.tab===tab?"page":"false"));
+}
+function setHeader(t,back){titleEl.textContent=t; backAction=back||null; backBtn.classList.toggle("show",!!back);}
+backBtn.onclick=()=>{ if(backAction) backAction(); };
+document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>go(b.dataset.tab));
+
+function go(tab,arg){
+  if(timerId){clearInterval(timerId);timerId=null;}
+  if(recog){recog.onend=null;recog.onerror=null;try{recog.abort();}catch(e){} recog=null;}
+  setTab(tab); window.scrollTo(0,0);
+  ({inici:renderInici,temari:renderTemari,redacta:renderRedacta,targetes:renderTargetes,crono:renderCrono})[tab](arg);
+  try{history.replaceState(null,"","#"+tab);}catch(e){}
+}
+
+/* ===================== INICI ===================== */
+function renderInici(){
+  setHeader("La Revolució Industrial");
+  const done=QUESTIONS.filter((q,i)=>S.best[i]!=null);
+  const avg=done.length?Math.round(done.reduce((a,q)=>a+S.best[QUESTIONS.indexOf(q)],0)/done.length):0;
+  const weak=QUESTIONS.map((q,i)=>({i,s:S.best[i]})).filter(x=>x.s==null||x.s<70);
+  view.innerHTML=`
+  <div class="stack">
+    <div>
+      <p class="eyebrow">Preparació d’examen · Història</p>
+      <h2 style="font-size:26px;margin-top:4px">Practica la redacció del tema</h2>
+      <p class="lead">Tot surt dels teus apunts. Escriu la resposta i després comprova quins punts clau has tractat.</p>
+    </div>
+    <div class="stats">
+      <div class="stat"><b>${done.length}/${QUESTIONS.length}</b><span>preguntes fetes</span></div>
+      <div class="stat"><b>${done.length?avg+"%":"–"}</b><span>mitjana</span></div>
+      <div class="stat"><b>${S.known.length}/${CARDS.length}</b><span>targetes sabudes</span></div>
+    </div>
+    <div class="row">
+      <button class="btn primary" id="rand" type="button">Pregunta a l’atzar</button>
+      <button class="btn" id="tema" type="button">Simulacre de tema complet</button>
+    </div>
+    <div class="card">
+      <p class="eyebrow">Esquema del tema</p>
+      <ul class="esquema">${SECTIONS.map((s,i)=>`<li><button type="button" data-s="${i}"><span class="n">${s.n}</span><span>${s.t}</span></button></li>`).join("")}</ul>
+    </div>
+    <div class="card">
+      <p class="eyebrow">Com estudiar amb l’app</p>
+      <ol class="guio">
+        <li><b>Temari</b>: llegeix el resum de cada apartat.</li>
+        <li><b>Targetes</b> i <b>Dates</b>: memoritza conceptes, personatges i cronologia.</li>
+        <li><b>Redacta</b>: respon sense mirar i corregeix-te amb la llista de punts clau. Repeteix les que surtin per sota del 70%.</li>
+      </ol>
+    </div>
+  </div>`;
+  $("#rand").onclick=()=>{const pool=weak.length?weak:QUESTIONS.map((q,i)=>({i})); const pick=pool[Math.floor(Math.random()*pool.length)].i; openQuestion(pick,"inici");};
+  $("#tema").onclick=()=>openQuestion(QUESTIONS.length-1,"inici");
+  view.querySelectorAll(".esquema button").forEach(b=>b.onclick=()=>{go("temari",+b.dataset.s);});
+}
+
+/* ===================== TEMARI ===================== */
+function renderTemari(openIdx){
+  setHeader("Temari");
+  view.innerHTML=`<div class="stack">
+    <p class="lead" style="margin:0">Resum fidel als apunts, apartat per apartat.</p>
+    ${SECTIONS.map((s,i)=>`
+    <details class="sec" id="sec${i}" ${openIdx===i?"open":""}>
+      <summary><span class="n">${s.n}</span><h2>${s.t}</h2><span class="chev" aria-hidden="true">›</span></summary>
+      <div class="secbody">
+        ${s.subs.map(sb=>`<h3>${sb.h}</h3><ul>${sb.b.map(x=>`<li>${x}</li>`).join("")}</ul>`).join("")}
+        <div class="row practice">${[...new Set(s.q)].map(qi=>`<button class="btn small" type="button" data-q="${qi}">Practica: pregunta ${qi+1}</button>`).join("")}</div>
+      </div>
+    </details>`).join("")}
+  </div>`;
+  view.querySelectorAll("[data-q]").forEach(b=>b.onclick=()=>openQuestion(+b.dataset.q,"temari"));
+  if(openIdx!=null){const el=$("#sec"+openIdx); if(el) setTimeout(()=>el.scrollIntoView({block:"start"}),50);}
+}
+
+/* ===================== REDACTA ===================== */
+function status(i){
+  if(S.best[i]!=null){const v=S.best[i]; return `<span class="pill ${v>=70?"good":"warn"}">Millor: ${v}%</span>`;}
+  if(S.drafts[i]) return `<span class="pill acc">Esborrany</span>`;
+  return `<span class="pill">Pendent</span>`;
+}
+function renderRedacta(){
+  setHeader("Redacta");
+  view.innerHTML=`<div class="stack">
+    <p class="lead" style="margin:0">Preguntes obertes com les de l’examen. Tria’n una, escriu i corregeix.</p>
+    ${QUESTIONS.map((q,i)=>`<button type="button" class="card qitem" data-i="${i}">
+      <span class="num">${q.tema?"T":i+1}</span>
+      <span class="txt"><b>${esc(q.q)}</b><span class="row meta">${status(i)}<span class="pill">${q.p.length} punts · ~${q.min} min</span></span></span>
+    </button>`).join("")}
+  </div>`;
+  view.querySelectorAll(".qitem").forEach(b=>b.onclick=()=>openQuestion(+b.dataset.i,"redacta"));
+}
+
+function openQuestion(i,from){
+  if(timerId){clearInterval(timerId);timerId=null;}
+  setTab("redacta"); window.scrollTo(0,0);
+  const q=QUESTIONS[i];
+  setHeader(q.tema?"Tema complet":"Pregunta "+(i+1),()=>go(from==="inici"?"inici":from==="temari"?"temari":"redacta", from==="temari"?q.sec:undefined));
+  view.innerHTML=`<div class="stack">
+    <div class="qhead"><p class="eyebrow">Apartat ${SECTIONS[q.sec].n} · ${SECTIONS[q.sec].t}</p><h2>${esc(q.q)}</h2></div>
+    <div class="card row split">
+      <div><span class="timer" id="tm">${q.min}:00</span> <span class="muted" style="font-size:14px">temps orientatiu</span></div>
+      <button class="btn small" id="tbtn" type="button">Inicia el rellotge</button>
+    </div>
+    <div class="voice row">
+      <button class="btn rec" id="mic" type="button" aria-pressed="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span id="miclbl">Respon amb la veu</span></button>
+      <span class="muted" style="font-size:14px" id="micst">Parla i el text s’anirà escrivint a sota.</span>
+    </div>
+    <div id="dictbox"></div>
+    <label for="ans" class="sr">La teva resposta</label>
+    <textarea id="ans" placeholder="Escriu aquí la teva resposta, com si fos a l’examen: introducció, desenvolupament i conclusió…">${esc(S.drafts[i]||"")}</textarea>
+    <div class="row split"><span class="muted" id="wc">0 paraules</span><button class="btn small ghost" id="hint" type="button">Què em falta? (pista)</button></div>
+    <div id="hintbox"></div>
+    <div class="row"><button class="btn primary" id="check" type="button">Corregeix</button><button class="btn" id="guio" type="button">Mostra el guió</button></div>
+    <div id="result"></div>
+  </div>`;
+  const ta=$("#ans"), wc=$("#wc");
+  const upd=()=>{const n=(ta.value.trim().match(/\S+/g)||[]).length; wc.textContent=n+" paraules"; S.drafts[i]=ta.value; save();};
+  ta.oninput=upd; upd();
+  setupVoice(ta,upd);
+  let left=q.min*60, running=false;
+  $("#tbtn").onclick=()=>{
+    if(running){clearInterval(timerId);timerId=null;running=false;$("#tbtn").textContent="Continua";return;}
+    running=true; $("#tbtn").textContent="Pausa";
+    timerId=setInterval(()=>{left--; const m=Math.floor(Math.abs(left)/60), s=Math.abs(left)%60;
+      const tm=$("#tm"); if(!tm){clearInterval(timerId);return;}
+      tm.textContent=(left<0?"-":"")+m+":"+String(s).padStart(2,"0"); tm.classList.toggle("low",left<=60);
+      if(left===0){tm.textContent="Temps!";}
+    },1000);
+  };
+  $("#hint").onclick=()=>{
+    const miss=q.p.filter(p=>!detect(ta.value,p));
+    const hb=$("#hintbox");
+    if(!miss.length){hb.innerHTML=`<div class="hint">Sembla que ja has tocat tots els punts. Corregeix-te per confirmar-ho.</div>`;return;}
+    const p=miss[Math.floor(Math.random()*miss.length)];
+    hb.innerHTML=`<div class="hint"><b>Pista (${miss.length} punts pendents):</b> parla de… ${esc(p[0].split(/[:(]/)[0].trim().toLowerCase())}.</div>`;
+  };
+  $("#guio").onclick=()=>{
+    $("#result").innerHTML=`<div class="card"><p class="eyebrow">Guió de la resposta (ordre recomanat)</p><ol class="guio">${q.p.map(p=>`<li>${esc(p[0])}</li>`).join("")}</ol>
+    <p class="muted" style="font-size:14px;margin:10px 0 0">Consell: tanca el guió i torna-ho a intentar sense mirar.</p></div>`;
+  };
+  $("#check").onclick=()=>{
+    if(!ta.value.trim()){$("#result").innerHTML=`<div class="hint">Escriu primer la resposta; després la podràs corregir.</div>`;return;}
+    const auto=q.p.map(p=>detect(ta.value,p));
+    $("#result").innerHTML=`<div class="card stack">
+      <div class="row split"><div><p class="eyebrow">Puntuació</p><div class="score" id="sc">0%</div></div><div class="muted" style="font-size:14px;max-width:60%">Marca o desmarca segons el que realment has explicat. Les marques automàtiques són orientatives.</div></div>
+      <div class="bar"><i id="bar" style="width:0"></i></div>
+      <ul class="checks">${q.p.map((p,k)=>`<li><label class="${auto[k]?"on":""}"><input type="checkbox" ${auto[k]?"checked":""} data-k="${k}"><span>${auto[k]?'<span class="auto">Detectat al teu text</span>':""}${esc(p[0])}</span></label></li>`).join("")}</ul>
+      <div class="row"><button class="btn primary" id="savesc" type="button">Desa la nota</button><button class="btn" id="again" type="button">Torna-hi des de zero</button></div>
+      <p id="saved" class="muted" style="margin:0;font-size:14px"></p>
+    </div>`;
+    const boxes=[...view.querySelectorAll(".checks input")];
+    const calc=()=>{const v=Math.round(boxes.filter(b=>b.checked).length/boxes.length*100); $("#sc").textContent=v+"%"; $("#bar").style.width=v+"%"; boxes.forEach(b=>b.closest("label").classList.toggle("on",b.checked)); return v;};
+    boxes.forEach(b=>b.onchange=calc); calc();
+    $("#savesc").onclick=()=>{const v=calc(); S.best[i]=Math.max(S.best[i]||0,v); save(); $("#saved").textContent="Desat. La teva millor nota en aquesta pregunta és "+S.best[i]+"%.";};
+    $("#again").onclick=()=>{ta.value="";upd();$("#result").innerHTML="";$("#hintbox").innerHTML="";window.scrollTo(0,0);ta.focus();};
+    $("#result").scrollIntoView({behavior:"smooth",block:"start"});
+  };
+}
+
+/* ===================== VEU ===================== */
+let recog=null;
+function dictationHelp(ta,reason){
+  const ios=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+  $("#dictbox").innerHTML=`<div class="dict">
+    <h3>Dicta amb el micròfon del teclat</h3>
+    <p class="muted" style="margin:0 0 6px;font-size:15px">${reason}</p>
+    ${ios?`<ol><li>Toca el requadre de la resposta perquè surti el teclat.</li><li>Prem la tecla del <b>micròfon</b> (a baix, al costat de l’espai) i parla.</li><li>Si no hi és: <b>Configuració › General › Teclat › Activar dictat</b>, i tria el teclat en català.</li><li>Pots dir «punt», «coma» o «punt i a part».</li></ol>`
+    :`<ol><li>Toca el requadre de la resposta perquè surti el teclat.</li><li>Prem la icona del <b>micròfon</b> del teclat (a Gboard, a dalt a la dreta) i parla.</li><li>Comprova que l’idioma del teclat és el <b>català</b> (mantén premuda la barra espaiadora o el globus per canviar-lo).</li><li>Pots dir «punt», «coma» o «punt i a part».</li></ol>`}
+    <div class="row" style="margin-top:10px"><button class="btn small primary" id="dictgo" type="button">Obre el teclat</button></div>
+  </div>`;
+  $("#dictgo").onclick=()=>{ta.focus(); ta.setSelectionRange(ta.value.length,ta.value.length); ta.scrollIntoView({block:"center"});};
+}
+function setupVoice(ta,upd){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  const btn=$("#mic"), lbl=$("#miclbl"), st=$("#micst");
+  let on=false, base="", gotAny=false;
+  const stop=()=>{on=false; btn.classList.remove("on"); btn.setAttribute("aria-pressed","false"); lbl.textContent="Respon amb la veu"; if(recog){try{recog.stop();}catch(e){} }};
+  btn.onclick=()=>{
+    if(on){stop(); st.textContent="Dictat aturat. Revisa el text abans de corregir."; return;}
+    if(!SR){dictationHelp(ta,"Aquest navegador no permet el reconeixement de veu dins la pàgina, però el teclat del mòbil sí."); return;}
+    try{
+      recog=new SR(); recog.lang="ca-ES"; recog.continuous=true; recog.interimResults=true;
+      base=ta.value.replace(/\s*$/,""); gotAny=false;
+      recog.onresult=e=>{
+        let fin="", tmp="";
+        for(let k=0;k<e.results.length;k++){const r=e.results[k]; (r.isFinal?(fin+=r[0].transcript+" "):(tmp+=r[0].transcript));}
+        gotAny=true;
+        ta.value=(base?base+" ":"")+fin+tmp; upd();
+        if(!on) return; st.textContent="Escoltant… toca de nou per aturar.";
+      };
+      recog.onerror=ev=>{
+        stop();
+        if(ev.error==="not-allowed"||ev.error==="service-not-allowed"||ev.error==="audio-capture"){
+          st.textContent="";
+          dictationHelp(ta,"El navegador no ha donat permís per fer servir el micròfon. Accepta el permís quan te’l demani o fes servir el dictat del teclat.");
+        } else if(ev.error==="no-speech"){ st.textContent="No t’he sentit. Torna-ho a provar més a prop del mòbil."; }
+        else { st.textContent=""; dictationHelp(ta,"El reconeixement de veu ha fallat ("+ev.error+"). Prova el dictat del teclat."); }
+      };
+      recog.onend=()=>{ if(on){ base=ta.value.replace(/\s*$/,""); try{recog.start();}catch(e){stop();} } };
+      recog.start();
+      on=true; btn.classList.add("on"); btn.setAttribute("aria-pressed","true"); lbl.textContent="Atura"; st.textContent="Escoltant… parla en català."; $("#dictbox").innerHTML="";
+    }catch(e){ stop(); dictationHelp(ta,"No s’ha pogut activar el micròfon dins la pàgina. Fes servir el dictat del teclat."); }
+  };
+}
+
+/* ===================== TARGETES ===================== */
+let deckFilter="Totes", deck=[], pos=0;
+function buildDeck(){
+  deck=CARDS.map((c,i)=>i).filter(i=>deckFilter==="Totes"||(deckFilter==="Per repassar"?!S.known.includes(i):CARDS[i][2]===deckFilter));
+  for(let i=deck.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]];}
+  pos=0;
+}
+function renderTargetes(){
+  setHeader("Targetes");
+  if(!deck.length) buildDeck();
+  const cats=["Totes","Per repassar","Conceptes","Personatges","Dades"];
+  const c=deck.length?CARDS[deck[pos]]:null;
+  view.innerHTML=`<div class="stack">
+    <div class="seg" role="group" aria-label="Filtre">${cats.map(k=>`<button type="button" aria-pressed="${k===deckFilter}" data-f="${k}">${k}</button>`).join("")}</div>
+    ${c?`
+    <div class="row split"><span class="muted">${pos+1} de ${deck.length}</span>${S.known.includes(deck[pos])?'<span class="pill good">Ja la saps</span>':'<span class="pill">'+c[2]+'</span>'}</div>
+    <div class="flash" id="fl" role="button" tabindex="0" aria-label="Gira la targeta">
+      <div class="inner">
+        <div class="face front"><p class="eyebrow">${c[2]}</p><h2>${esc(c[0])}</h2><p class="muted" style="margin:0">Toca per veure la resposta</p></div>
+        <div class="face back"><p class="eyebrow">${esc(c[0])}</p><p>${esc(c[1])}</p></div>
+      </div>
+    </div>
+    <div class="row" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <button class="btn" id="rep" type="button">Repassar</button>
+      <button class="btn primary" id="ok" type="button">La sé</button>
+    </div>
+    <div class="row split"><button class="btn small ghost" id="prev" type="button">‹ Anterior</button><button class="btn small ghost" id="shuf" type="button">Barreja</button><button class="btn small ghost" id="next" type="button">Següent ›</button></div>
+    `:`<div class="card"><h2 style="font-size:20px">No queda cap targeta per repassar</h2><p class="lead">Les saps totes. Tria un altre filtre o reinicia el comptador.</p><div class="row" style="margin-top:10px"><button class="btn" id="reset" type="button">Reinicia les targetes sabudes</button></div></div>`}
+  </div>`;
+  view.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{deckFilter=b.dataset.f;buildDeck();renderTargetes();});
+  if(!c){$("#reset").onclick=()=>{S.known=[];save();buildDeck();renderTargetes();};return;}
+  const fl=$("#fl"); const flip=()=>fl.classList.toggle("flipped");
+  fl.onclick=flip; fl.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();flip();}};
+  const next=()=>{pos=(pos+1)%deck.length;renderTargetes();};
+  $("#next").onclick=next; $("#prev").onclick=()=>{pos=(pos-1+deck.length)%deck.length;renderTargetes();};
+  $("#shuf").onclick=()=>{buildDeck();renderTargetes();};
+  $("#ok").onclick=()=>{const id=deck[pos]; if(!S.known.includes(id))S.known.push(id); save();
+    if(deckFilter==="Per repassar"){deck.splice(pos,1); if(pos>=deck.length)pos=0; renderTargetes();} else next();};
+  $("#rep").onclick=()=>{S.known=S.known.filter(x=>x!==deck[pos]); save(); next();};
+}
+
+/* ===================== CRONOLOGIA ===================== */
+let cronoMode="linia", hideDates=false, game=null;
+function newGame(){
+  const pool=[...EVENTS]; for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
+  const pick=[]; const ys=new Set(); for(const e of pool){if(!ys.has(e[0])){pick.push(e);ys.add(e[0]);} if(pick.length===5)break;}
+  game={items:pick,order:[],checked:false};
+}
+function renderCrono(){
+  setHeader("Dates");
+  view.innerHTML=`<div class="stack">
+    <div class="seg" role="group" aria-label="Mode"><button type="button" data-m="linia" aria-pressed="${cronoMode==="linia"}">Línia del temps</button><button type="button" data-m="ordena" aria-pressed="${cronoMode==="ordena"}">Ordena els fets</button></div>
+    <div id="cbody"></div></div>`;
+  view.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{cronoMode=b.dataset.m;renderCrono();});
+  const cb=$("#cbody");
+  if(cronoMode==="linia"){
+    cb.innerHTML=`<div class="stack"><div class="row split"><span class="muted">Amaga els fets i intenta recordar-los.</span><button class="btn small" id="hide" type="button">${hideDates?"Mostra-ho tot":"Amaga els fets"}</button></div>
+    <div class="card"><ul class="tl">${EVENTS.map(e=>`<li><span class="y">${e[0]}</span><span class="dot"></span><span class="ev ${hideDates?"hid":""}" ${hideDates?'role="button" tabindex="0" aria-label="Mostra el fet"':""}>${esc(e[1])}</span></li>`).join("")}</ul></div></div>`;
+    $("#hide").onclick=()=>{hideDates=!hideDates;renderCrono();};
+    cb.querySelectorAll(".ev.hid").forEach(el=>{const r=()=>el.classList.remove("hid"); el.onclick=r; el.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();r();}};});
+  } else {
+    if(!game) newGame();
+    const g=game;
+    cb.innerHTML=`<div class="stack"><p class="lead" style="margin:0">Toca els fets del més antic al més recent.</p>
+      <div class="order">${g.items.map((e,k)=>{const o=g.order.indexOf(k); let cls=o>=0?"picked":""; if(g.checked){const sorted=[...g.items].sort((a,b)=>a[0]-b[0]); cls+=sorted[o]===e?" ok":" ko";}
+        return `<button type="button" class="${cls}" data-k="${k}"><span class="badge">${o>=0?o+1:""}</span><span>${esc(e[1])}</span>${g.checked?`<span class="yr">${e[0]}</span>`:""}</button>`;}).join("")}</div>
+      <div id="gres"></div>
+      <div class="row"><button class="btn" id="undo" type="button">Desfés</button><button class="btn primary" id="newg" type="button">Nova ronda</button></div></div>`;
+    cb.querySelectorAll(".order button").forEach(b=>b.onclick=()=>{ if(g.checked)return; const k=+b.dataset.k; if(g.order.includes(k))return; g.order.push(k);
+      if(g.order.length===g.items.length) g.checked=true; renderCrono(); });
+    $("#undo").onclick=()=>{if(g.checked){g.checked=false;} g.order.pop(); renderCrono();};
+    $("#newg").onclick=()=>{newGame();renderCrono();};
+    if(g.checked){const sorted=[...g.items].sort((a,b)=>a[0]-b[0]); const ok=g.order.filter((k,o)=>sorted[o]===g.items[k]).length;
+      $("#gres").innerHTML=`<div class="${ok===5?"card":"hint"}"><b>${ok} de 5 a la posició correcta.</b> ${ok===5?"Perfecte!":"Mira els anys i torna-ho a provar."}</div>`;}
+  }
+}
+
+/* ===================== ARRENCADA ===================== */
+const start=(location.hash||"").replace("#","");
+go(["inici","temari","redacta","targetes","crono"].includes(start)?start:"inici");
+</script>
+</body>
+</html>
